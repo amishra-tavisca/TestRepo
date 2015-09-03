@@ -1,0 +1,33 @@
+select  YEAR(O.OrderDate),
+		(	(
+
+				(select  ISNULL(SUM(12*salary),0) 
+				from Employees
+				where YEAR(JoiningDate)<YEAR(O.OrderDate))    +
+
+				(select  ISNULL(SUM((13-month(JoiningDate))*salary),0) 
+				from Employees
+				where YEAR(JoiningDate)=YEAR(O.OrderDate))
+			)
+			/
+				(select COUNT(*) 
+				from Orders h
+				where YEAR(h.OrderDate)=YEAR(O.OrderDate))
+		) as "cost per order",
+		(	(
+
+				(select  ISNULL(SUM(12*salary),0) 
+				from Employees
+				where YEAR(JoiningDate)<YEAR(O.OrderDate))    +
+
+				(select  ISNULL(SUM((13-month(JoiningDate))*salary),0) 
+				from Employees
+				where YEAR(JoiningDate)=YEAR(O.OrderDate))
+			)
+			/
+				((select SUM(OrderAmount) 
+				from Orders o
+				where YEAR(o.OrderDate)=YEAR(O.OrderDate))/60)
+		) as "cost per dollar of order earned"
+from Orders O
+group by YEAR(O.OrderDate)
