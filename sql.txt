@@ -26,8 +26,8 @@ select  YEAR(O.OrderDate),
 			)
 			/
 				((select SUM(OrderAmount) 
-				from Orders o
-				where YEAR(o.OrderDate)=YEAR(O.OrderDate))/60)
+				from Orders h
+				where YEAR(h.OrderDate)=YEAR(O.OrderDate))/60)
 		) as "cost per dollar of order earned"
 from Orders O
 group by YEAR(O.OrderDate)
